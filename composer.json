@@ -1,0 +1,12 @@
+{
+    "name": "ibu/letteryourself",
+    "description": "Web course project",
+    "license": "Apache2",
+    "authors": [
+        {
+            "name": "suleyman",
+            "email": "suleymanoner1999@gmail.com"
+        }
+    ],
+    "require": {}
+}
