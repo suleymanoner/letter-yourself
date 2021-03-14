@@ -10,5 +10,4 @@ class PhotographContentDao extends BaseDao{
 
 }
 
-
 ?>

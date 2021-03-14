@@ -9,5 +9,4 @@ class TextContentDao extends BaseDao{
 
 }
 
-
 ?>
