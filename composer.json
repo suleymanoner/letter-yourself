@@ -8,5 +8,7 @@
             "email": "suleymanoner1999@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "mikecao/flight": "^1.3"
+    }
 }
