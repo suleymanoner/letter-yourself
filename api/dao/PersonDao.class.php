@@ -11,9 +11,13 @@ class PersonDao extends BaseDao{
     return $this->query_unique("SELECT * FROM persons WHERE email = :email", ["email" => $email]);
   }
 
-
   public function update_person_by_email($email, $person){
     $this->update("persons", $email, $person, "email");
   }
+
+  public function get_person_by_token($token){
+    return $this->query_unique("SELECT * FROM persons WHERE token = :token", ["token" => $token]);
+  }
+
 }
 ?>
