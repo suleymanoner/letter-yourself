@@ -7,7 +7,9 @@ class LetterDao extends BaseDao{
     parent::__construct("letter");
   }
 
-  public function get_letter($person_to_sent_id, $offset, $limit, $search){
+  public function get_letter($person_to_sent_id, $offset, $limit, $search, $order){
+
+    list($order_column, $order_direction) = self::parse_order($order);
 
     $params = ["person_to_sent_id" => $person_to_sent_id];
     $query = "SELECT * FROM letter
@@ -18,7 +20,11 @@ class LetterDao extends BaseDao{
       $params["search"] = strtolower($search);
     }
 
+    // when disable order, it doesn't work. Check on internet.
+    $query .= "ORDER BY ${order_column} ${order_direction} ";
     $query .= "LIMIT ${limit} OFFSET ${offset}";
+
+
 
     return $this->query($query, $params);
   }

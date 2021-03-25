@@ -12,14 +12,15 @@ class LetterService extends BaseService{
 
   public function add($letter){
     try {
-      parent::add($letter);
+      $letter['created_at'] = date(Config::DATE_FORMAT);
+      return parent::add($letter);
     } catch (\Exception $e) {
       throw $e;
     }
   }
 
-  public function get_letter($person_to_sent_id, $offset, $limit, $search){
-    return $this->dao->get_letter($person_to_sent_id, $offset, $limit, $search);
+  public function get_letter($person_to_sent_id, $offset, $limit, $search, $order){
+    return $this->dao->get_letter($person_to_sent_id, $offset, $limit, $search, $order);
   }
 
 

@@ -5,7 +5,8 @@ Flight::route('GET /letter', function(){
   $offset = Flight::query('offset', 0);
   $limit = Flight::query('limit', 10);
   $search = Flight::query('search');
-  Flight::json(Flight::letterService()->get_letter($person_to_sent_id, $offset, $limit, $search));
+  $order = Flight::query('order');
+  Flight::json(Flight::letterService()->get_letter($person_to_sent_id, $offset, $limit, $search, $order));
 });
 
 Flight::route('POST /letter', function(){
