@@ -18,6 +18,10 @@ class LetterService extends BaseService{
     }
   }
 
+  public function get_letter($person_to_sent_id, $offset, $limit, $search){
+    return $this->dao->get_letter($person_to_sent_id, $offset, $limit, $search);
+  }
+
 
 }
 
