@@ -14,36 +14,43 @@ class PersonService extends BaseService{
   }
 
   public function register($person){
-    if(!isset($person['account'])) throw new Exception("Account is required!");
+    //if(!isset($person['account'])) throw new Exception("Account is required!");
 
 
     try{
+      $this->dao->beginTransaction();
 
-    $account = $this->accountDao->add([
-      "name" => $person['account'],
-      "status" => "PENDING",
-      "registered_at" => date(Config::DATE_FORMAT)
-    ]);
+      /*
+      $account = $this->accountDao->add([
+        "name" => $person['account'],
+        "created_at" => date(Config::DATE_FORMAT)
+      ]);
+      */
 
-    $person = parent::add([
-      "account_id" => $account['id'],
-      "name" => $person['name'],
-      "surname" => $person['surname'],
-      "email" => $person['email'],
-      "password" => $person['password'],
-      "status" => "PENDING",
-      "created_at" => date(Config::DATE_FORMAT),
-      "token" => md5(random_bytes(16))
-     ]);
+      $person = parent::add([
+        "account_id" => $person['account_id'],
+        "name" => $person['name'],
+        "surname" => $person['surname'],
+        "email" => $person['email'],
+        "password" => $person['password'],
+        "status" => "PENDING",
+        "created_at" => date(Config::DATE_FORMAT),
+        "token" => md5(random_bytes(16))
+       ]);
+       $this->dao->commit();
     }
     catch(\Exception $e){
-      throw $e;
+      $this->dao->rollBack();
+      if(str_contains($e->getMessage(), 'persons.uq_person_email')){
+        throw new Exception("Person with same email already exist : " . $person['email'] , 400, $e);
+      } else{
+        throw $e;
+      }
     }
 
     //here we need send email with token
 
     return $person;
-
   }
 
   public function confirm($token){

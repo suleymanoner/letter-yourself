@@ -10,6 +10,14 @@ require_once dirname(__FILE__).'/routes/person.php';
 require_once dirname(__FILE__).'/services/AccountService.class.php';
 require_once dirname(__FILE__).'/services/PersonService.class.php';
 
+Flight::set('flight.log_errors', TRUE);
+
+/* Error handling for API */
+Flight::map('error', function(Exception $ex){
+  // it is handles error and changes html format to application/json format.
+  Flight::json(["message" => $ex->getMessage()], $ex->getCode());
+});
+
 
 Flight::map('query', function($name, $default_value = NULL){
   $request = Flight::request();
