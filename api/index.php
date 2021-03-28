@@ -1,5 +1,4 @@
 <?php
-
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -31,6 +30,12 @@ Flight::map('query', function($name, $default_value = NULL){
 Flight::register('accountService','AccountService');
 Flight::register('personService','PersonService');
 Flight::register('letterService','LetterService');
+
+Flight::route('GET /swagger', function(){
+  $openapi = @\OpenApi\scan(dirname(__FILE__)."/routes");
+  header('Content-Type: application/json');
+  echo $openapi->toJson();
+});
 
 Flight::start();
 

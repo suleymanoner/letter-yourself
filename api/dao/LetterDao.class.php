@@ -16,15 +16,13 @@ class LetterDao extends BaseDao{
               WHERE person_to_sent_id = :person_to_sent_id ";
 
     if(isset($search)){
-      $query .= "AND LOWER(title) LIKE CONCAT('%', :search, '%') OR send_date LIKE CONCAT('%', :search, '%') ";
-      $params["search"] = strtolower($search);
+      $query .= "AND ( LOWER(title) LIKE CONCAT('%', :search, '%') OR send_date LIKE CONCAT('%', :search, '%')) ";
+      $params['search'] = strtolower($search);
     }
 
     // when disable order, it doesn't work. Check on internet.
     $query .= "ORDER BY ${order_column} ${order_direction} ";
     $query .= "LIMIT ${limit} OFFSET ${offset}";
-
-
 
     return $this->query($query, $params);
   }
