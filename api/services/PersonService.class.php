@@ -17,6 +17,23 @@ class PersonService extends BaseService{
     $this->smtpClient = new SMTPClient();
   }
 
+
+  public function login($person){
+    $db_user = $this->dao->get_person_by_email($person['email']);
+
+    if(!isset($db_user['id'])) throw new Exception("Person doesn't exist", 400);
+
+    if($db_user['status'] != 'ACTIVE') throw new Exception("Person doesn't active.");
+
+    $account = $this->accountDao->get_by_id($db_user['account_id']);
+    if(!isset($account['id']) || $account['status'] != 'ACTIVE') throw new Exception("Account doesn't exist", 400);
+
+    if($db_user['password'] != md5($person['password'])) throw new Exception("Invalid password.", 400);
+
+    return $db_user;
+  }
+
+
   public function register($person){
     if(!isset($person['account'])) throw new Exception("Account is required!");
 
@@ -34,7 +51,7 @@ class PersonService extends BaseService{
         "name" => $person['name'],
         "surname" => $person['surname'],
         "email" => $person['email'],
-        "password" => $person['password'],
+        "password" => md5($person['password']),
         "status" => "PENDING",
         "created_at" => date(Config::DATE_FORMAT),
         "token" => md5(random_bytes(16))
@@ -62,8 +79,6 @@ class PersonService extends BaseService{
 
     $this->dao->update($person['id'], ["status" => "ACTIVE"]);
     $this->accountDao->update($person['account_id'], ["status" => "ACTIVE"]);
-
-
   }
 
 
