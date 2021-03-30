@@ -3,32 +3,34 @@
 require_once dirname(__FILE__).'/BaseService.class.php';
 require_once dirname(__FILE__).'/../dao/PersonDao.class.php';
 require_once dirname(__FILE__).'/../dao/AccountDao.class.php';
+require_once dirname(__FILE__).'/../clients/SMTPClient.class.php';
+
 
 class PersonService extends BaseService{
 
   private $accountDao;
+  private $smtpClient;
 
   public function __construct(){
     $this->dao = new PersonDao();
     $this->accountDao = new AccountDao();
+    $this->smtpClient = new SMTPClient();
   }
 
   public function register($person){
-    //if(!isset($person['account'])) throw new Exception("Account is required!");
-
+    if(!isset($person['account'])) throw new Exception("Account is required!");
 
     try{
       $this->dao->beginTransaction();
 
-      /*
       $account = $this->accountDao->add([
         "name" => $person['account'],
+        "status" => "PENDING",
         "created_at" => date(Config::DATE_FORMAT)
       ]);
-      */
 
       $person = parent::add([
-        "account_id" => $person['account_id'],
+        "account_id" => $account['id'],
         "name" => $person['name'],
         "surname" => $person['surname'],
         "email" => $person['email'],
@@ -48,7 +50,7 @@ class PersonService extends BaseService{
       }
     }
 
-    //here we need send email with token
+    $this->smtpClient->send_register_token($person);
 
     return $person;
   }
@@ -65,9 +67,6 @@ class PersonService extends BaseService{
   }
 
 
-
 }
-
-
 
 ?>

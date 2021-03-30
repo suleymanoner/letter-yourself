@@ -17,7 +17,5 @@ class AccountDao extends BaseDao{
                          ["name" => strtolower($search)]);
   }
 
-
 }
-
 ?>
