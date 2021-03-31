@@ -4,6 +4,12 @@
  * @OA\Info(title="LetterYourself API", version="0.1")
  * @OA\OpenApi(
  *   @OA\Server(url="http://localhost/letteryourself/api/", description="Development Environment")
+ * ),
+ * @OA\SecurityScheme(
+ *      securityScheme="ApiKeyAuth",
+ *      in="header",
+ *      name="Authentication",
+ *      type="apiKey"
  * )
  */
 
@@ -25,13 +31,26 @@ Flight::route('GET /accounts', function(){
 });
 
 /**
- * @OA\Get( path="/accounts/{id}", tags={"account"},
- *     @OA\Parameter( @OA\Schema(type="integer"), in="path", name="id", default=1, description="Id of account"),
+ * @OA\Get( path="/accounts/{id}", tags={"account"}, security={{"ApiKeyAuth": {}}},
+ *     @OA\Parameter( type="integer", in="path", name="id", default=1, description="Id of account"),
  *     @OA\Response(response="200", description="Get spesific account from database.")
  * )
  */
 Flight::route('GET /accounts/@id', function($id){
-  Flight::json(Flight::accountService()->get_by_id($id));
+  $headers = getallheaders();
+  $token = @$headers['Authentication'];
+  try {
+    $decoded = (array)\Firebase\JWT\JWT::decode($token, "JWT SECRET", ['HS256']);
+
+    if($decoded['aid'] == $id){
+      Flight::json(Flight::accountService()->get_by_id($id));
+    } else{
+      Flight::json(["message" => "You can't access that account."], 403);
+    }
+
+  } catch (\Exception $e) {
+    Flight::json(["message" => $e->getMessage()], 401);
+  }
 });
 
 /**
