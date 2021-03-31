@@ -5,6 +5,7 @@ require_once dirname(__FILE__).'/../dao/PersonDao.class.php';
 require_once dirname(__FILE__).'/../dao/AccountDao.class.php';
 require_once dirname(__FILE__).'/../clients/SMTPClient.class.php';
 
+use \Firebase\JWT\JWT;
 
 class PersonService extends BaseService{
 
@@ -44,18 +45,22 @@ class PersonService extends BaseService{
 
 
   public function login($person){
-    $db_user = $this->dao->get_person_by_email($person['email']);
+    $db_person = $this->dao->get_person_by_email($person['email']);
 
-    if(!isset($db_user['id'])) throw new Exception("Person doesn't exist", 400);
+    if(!isset($db_person['id'])) throw new Exception("Person doesn't exist", 400);
 
-    if($db_user['status'] != 'ACTIVE') throw new Exception("Person doesn't active.");
+    if($db_person['status'] != 'ACTIVE') throw new Exception("Person doesn't active.");
 
-    $account = $this->accountDao->get_by_id($db_user['account_id']);
+    $account = $this->accountDao->get_by_id($db_person['account_id']);
     if(!isset($account['id']) || $account['status'] != 'ACTIVE') throw new Exception("Account doesn't exist", 400);
 
-    if($db_user['password'] != md5($person['password'])) throw new Exception("Invalid password.", 400);
+    if($db_person['password'] != md5($person['password'])) throw new Exception("Invalid password.", 400);
 
-    return $db_user;
+
+    $jwt = JWT::encode(["id" => $db_person["id"], "aid" => $db_person["account_id"], "r" => $db_person["role"]], "JWT SECRET");
+
+
+    return ["token" => $jwt];
   }
 
 
