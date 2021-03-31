@@ -17,23 +17,28 @@ class PersonService extends BaseService{
     $this->smtpClient = new SMTPClient();
   }
 
-  public function forgot($person){
-
-      $db_person = $this->dao->get_person_by_email($person['email']);
-      if(!isset($db_person['id'])) throw new Exception("Person doesn't exist", 400);
-
-      $db_person = $this->update($db_person['id'], ['token' => md5(random_bytes(16))]);
-
-      $this->smtpClient->send_person_recovery_token($db_person);
-
-  }
-
   public function reset($person){
 
     $db_person = $this->dao->get_person_by_token($person['token']);
     if(!isset($db_person['id'])) throw new Exception("Invalid token",400);
 
-    $this->dao->update($db_person['id'], ['password' => md5($person['password'])]);
+    if (strtotime(date(Config::DATE_FORMAT)) - strtotime($db_person['created_at']) > 300) throw new Exception("Token time expired");
+
+    $this->dao->update($db_person['id'], ['password' => md5($person['password']), 'token' => NULL]);
+
+  }
+
+
+  public function forgot($person){
+
+      $db_person = $this->dao->get_person_by_email($person['email']);
+      if(!isset($db_person['id'])) throw new Exception("Person doesn't exist", 400);
+
+      if (strtotime(date(Config::DATE_FORMAT)) - strtotime($db_person['created_at']) < 300) throw new Exception("Be patient token on his way.");
+
+      $db_person = $this->update($db_person['id'], ['token' => md5(random_bytes(16)), 'token_created_at' => date(Config::DATE_FORMAT)]);
+
+      $this->smtpClient->send_person_recovery_token($db_person);
 
   }
 
@@ -97,7 +102,7 @@ class PersonService extends BaseService{
 
     if(!isset($person['id'])) throw new Exception("Invalid token",400);
 
-    $this->dao->update($person['id'], ["status" => "ACTIVE"]);
+    $this->dao->update($person['id'], ["status" => "ACTIVE", "token" => NULL]);
     $this->accountDao->update($person['account_id'], ["status" => "ACTIVE"]);
   }
 
