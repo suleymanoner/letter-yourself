@@ -7,6 +7,7 @@ require_once dirname(__FILE__).'/../vendor/autoload.php';
 require_once dirname(__FILE__).'/routes/accounts.php';
 require_once dirname(__FILE__).'/routes/person.php';
 require_once dirname(__FILE__).'/routes/letter.php';
+require_once dirname(__FILE__).'/routes/middleware.php';
 require_once dirname(__FILE__).'/services/AccountService.class.php';
 require_once dirname(__FILE__).'/services/PersonService.class.php';
 require_once dirname(__FILE__).'/services/LetterService.class.php';
