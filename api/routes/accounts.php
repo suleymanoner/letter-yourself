@@ -12,7 +12,7 @@
  *     @OA\Parameter(type="integer", in="query", name="offset", default=0, description="Offset for pagination"),
  *     @OA\Parameter(type="integer", in="query", name="limit", default=10, description="Limit for pagination"),
  *     @OA\Parameter(type="string", in="query", name="search", description="Search string for account. Case insensetive."),
-*     @OA\Parameter(type="string", in="query", name="order", default="-id", description="Sorting : '-column_name' ascending order, '+column_name' descending order"),
+ *     @OA\Parameter(type="string", in="query", name="order", default="-id", description="Sorting : '-column_name' ascending order, '+column_name' descending order"),
  *     @OA\Response(response="200", description="List accounts from database.")
  * )
  */

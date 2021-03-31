@@ -17,6 +17,26 @@ class PersonService extends BaseService{
     $this->smtpClient = new SMTPClient();
   }
 
+  public function forgot($person){
+
+      $db_person = $this->dao->get_person_by_email($person['email']);
+      if(!isset($db_person['id'])) throw new Exception("Person doesn't exist", 400);
+
+      $db_person = $this->update($db_person['id'], ['token' => md5(random_bytes(16))]);
+
+      $this->smtpClient->send_person_recovery_token($db_person);
+
+  }
+
+  public function reset($person){
+
+    $db_person = $this->dao->get_person_by_token($person['token']);
+    if(!isset($db_person['id'])) throw new Exception("Invalid token",400);
+
+    $this->dao->update($db_person['id'], ['password' => md5($person['password'])]);
+
+  }
+
 
   public function login($person){
     $db_user = $this->dao->get_person_by_email($person['email']);
@@ -75,7 +95,7 @@ class PersonService extends BaseService{
   public function confirm($token){
     $person = $this->dao->get_person_by_token($token);
 
-    if(!isset($person['id'])) throw new Exception("Invalid token");
+    if(!isset($person['id'])) throw new Exception("Invalid token",400);
 
     $this->dao->update($person['id'], ["status" => "ACTIVE"]);
     $this->accountDao->update($person['account_id'], ["status" => "ACTIVE"]);
