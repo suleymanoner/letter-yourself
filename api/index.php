@@ -28,6 +28,11 @@ Flight::map('query', function($name, $default_value = NULL){
   return $query_param;
 });
 
+Flight::map('header', function($name){
+  $headers = getallheaders();
+  return @$headers[$name];
+});
+
 Flight::register('accountService','AccountService');
 Flight::register('personService','PersonService');
 Flight::register('letterService','LetterService');

@@ -56,9 +56,7 @@ class PersonService extends BaseService{
 
     if($db_person['password'] != md5($person['password'])) throw new Exception("Invalid password.", 400);
 
-
-    $jwt = \Firebase\JWT\JWT::encode(["id" => $db_person["id"], "aid" => $db_person["account_id"], "r" => $db_person["role"]], "JWT SECRET");
-
+    $jwt = \Firebase\JWT\JWT::encode(["id" => $db_person["id"], "aid" => $db_person["account_id"], "r" => $db_person["role"]], Config::JWT_SECRET);
 
     return ["token" => $jwt];
   }

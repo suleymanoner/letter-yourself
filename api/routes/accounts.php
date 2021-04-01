@@ -14,7 +14,7 @@
  */
 
 /**
- * @OA\Get( path="/accounts", tags={"account"}, security={{"ApiKeyAuth": {}}},
+ * @OA\Get( path="/admin/accounts", tags={"x-admin","account"}, security={{"ApiKeyAuth": {}}},
  *     @OA\Parameter(type="integer", in="query", name="offset", default=0, description="Offset for pagination"),
  *     @OA\Parameter(type="integer", in="query", name="limit", default=10, description="Limit for pagination"),
  *     @OA\Parameter(type="string", in="query", name="search", description="Search string for account. Case insensetive."),
@@ -22,7 +22,7 @@
  *     @OA\Response(response="200", description="List accounts from database.")
  * )
  */
-Flight::route('GET /accounts', function(){
+Flight::route('GET /admin/accounts', function(){
   $offset = Flight::query('offset', 0);
   $limit = Flight::query('limit', 10);
   $search = Flight::query('search');
@@ -31,18 +31,18 @@ Flight::route('GET /accounts', function(){
 });
 
 /**
- * @OA\Get( path="/accounts/{id}", tags={"account"}, security={{"ApiKeyAuth": {}}},
+ * @OA\Get( path="/admin/accounts/{id}", tags={"x-admin","account"}, security={{"ApiKeyAuth": {}}},
  *     @OA\Parameter( type="integer", in="path", name="id", default=1, description="Id of account"),
  *     @OA\Response(response="200", description="Get spesific account from database.")
  * )
  */
-Flight::route('GET /accounts/@id', function($id){
+Flight::route('GET /admin/accounts/@id', function($id){
   if(Flight::get('person')['aid'] != $id) throw new Exception("You can't access this account.", 403);
   Flight::json(Flight::accountService()->get_by_id($id));
 });
 
 /**
- * @OA\Post( path="/accounts", tags={"account"}, security={{"ApiKeyAuth": {}}},
+ * @OA\Post( path="/admin/accounts", tags={"x-admin","account"}, security={{"ApiKeyAuth": {}}},
  *    @OA\RequestBody(description="Account info", required=true,
  *        @OA\MediaType(
  *            mediaType="application/json",
@@ -55,13 +55,13 @@ Flight::route('GET /accounts/@id', function($id){
  *    @OA\Response(response="200", description="Account added with assigned id into database.")
  * )
  */
-Flight::route('POST /accounts', function(){
+Flight::route('POST /admin/accounts', function(){
   $data = Flight::request()->data->getData();
   Flight::json(Flight::accountService()->add($data));
 });
 
 /**
- * @OA\Put( path="/accounts/{id}", tags={"account"}, security={{"ApiKeyAuth": {}}},
+ * @OA\Put( path="/admin/accounts/{id}", tags={"x-admin","account"}, security={{"ApiKeyAuth": {}}},
  *     @OA\Parameter( @OA\Schema(type="integer"), in="path", name="id", default=1),
  *     @OA\RequestBody(description="Account info that is going to be updated.", required=true,
  *        @OA\MediaType(
@@ -75,10 +75,19 @@ Flight::route('POST /accounts', function(){
  *     @OA\Response(response="200", description="Update account based on id.")
  * )
  */
-Flight::route('PUT /accounts/@id', function($id){
+Flight::route('PUT /admin/accounts/@id', function($id){
   $data = Flight::request()->data->getData();
   Flight::json(Flight::accountService()->update($id, $data));
 });
 
+
+/**
+ * @OA\Get(path="/person/account", tags={"x-person", "persons"}, security={{"ApiKeyAuth": {}}},
+ *     @OA\Response(response="200", description="Fetch user account")
+ * )
+ */
+Flight::route('GET /person/account', function(){
+  Flight::json(Flight::accountService()->get_by_id(Flight::get('person')['aid']));
+});
 
 ?>
