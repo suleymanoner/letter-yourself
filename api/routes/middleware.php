@@ -2,7 +2,7 @@
 
 Flight::route('/person/*', function(){
   try {
-    $person = (array)\Firebase\JWT\JWT::decode(Flight::heawder("Authentication"), Config::JWT_SECRET, ['HS256']);
+    $person = (array)\Firebase\JWT\JWT::decode(Flight::header("Authentication"), Config::JWT_SECRET, ['HS256']);
     if(Flight::request()->method != "GET" && $person['r'] == "USER_READ_ONLY"){
       throw new Exception("Read only users can't change anything.", 403);
     }

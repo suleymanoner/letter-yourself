@@ -9,22 +9,25 @@
  * )
  */
 Flight::route('GET /person/letter', function(){
-  $person_to_sent_id = Flight::query('person_to_sent_id');
+  //not works, there is problem with setting person, check
+  //$account_id = Flight::get('person')['aid'];
+
   $offset = Flight::query('offset', 0);
   $limit = Flight::query('limit', 10);
   $search = Flight::query('search');
   $order = Flight::query('order', '-id');
-  Flight::json(Flight::letterService()->get_letter($person_to_sent_id, $offset, $limit, $search, $order));
+  Flight::json(Flight::letterService()->get_letter5($offset, $limit, $search, $order));
 });
 
 /**
  * @OA\Get(path="/person/letter/{id}", tags={"x-person", "letter"}, security={{"ApiKeyAuth": {}}},
  *     @OA\Parameter(type="integer", in="path", name="id", default=1, description="Id of letter"),
- *     @OA\Response(response="200", description="Fetch individual email template")
+ *     @OA\Response(response="200", description="Fetch individual letter")
  * )
  */
-Flight::route('GET /person/letter/@id', function($id){
-  Flight::json(Flight::letterService()->get_by_id($id));
+Flight::route('GET /person/letter/@id', function($persons_id){
+  //Flight::json(Flight::communicationService()->get_letter_with_persons_id($persons_id));
+  Flight::json(Flight::letterService()->get_by_id($persons_id));
 });
 
 /**
@@ -33,7 +36,8 @@ Flight::route('GET /person/letter/@id', function($id){
  *       @OA\MediaType(mediaType="application/json",
  *    			@OA\Schema(
  *    				 @OA\Property(property="title", required="true", type="string", example="My Letter",	description="Title of the letter" ),
- *    				 @OA\Property(property="send_date", required="true", type="string", example="2021-03-31 22:51:30",	description="Send date of your letter." )
+ *    				 @OA\Property(property="body", required="true", type="string", example="My Dear friend..",	description="Body of the letter" ),
+ *             @OA\Property(property="send_at", required="true", type="DATE_FORMAT", example="2021-03-31 22:15:00",	description="Send date of your letter" )
  *          )
  *       )
  *     ),
@@ -76,13 +80,13 @@ Flight::route('PUT /person/letter/@id', function($id){
  *     @OA\Response(response="200", description="List email templates for user")
  * )
  */
-Flight::route('GET /admin/person/letter', function(){
-  $person_to_sent_id = Flight::query('person_to_sent_id');
+Flight::route('GET /admin/letter', function(){
+//$account_id = Flight::get('person')['aid'];
   $offset = Flight::query('offset', 0);
   $limit = Flight::query('limit', 10);
   $search = Flight::query('search');
   $order = Flight::query('order', '-id');
-  Flight::json(Flight::letterService()->get_letter($person_to_sent_id, $offset, $limit, $search, $order));
+  Flight::json(Flight::letterService()->get_letter5($offset, $limit, $search, $order));
 });
 
 /**
@@ -91,7 +95,7 @@ Flight::route('GET /admin/person/letter', function(){
  *     @OA\Response(response="200", description="Fetch individual email template")
  * )
  */
-Flight::route('GET /admin/person/letter/@id', function($id){
+Flight::route('GET /admin/letter/@id', function($id){
   Flight::json(Flight::letterService()->get_by_id($id));
 });
 

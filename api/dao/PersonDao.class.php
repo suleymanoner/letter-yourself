@@ -19,5 +19,7 @@ class PersonDao extends BaseDao{
     return $this->query_unique("SELECT * FROM persons WHERE token = :token", ["token" => $token]);
   }
 
+
+
 }
 ?>

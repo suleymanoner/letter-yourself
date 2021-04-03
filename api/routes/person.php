@@ -30,8 +30,9 @@ Flight::route('POST /register', function(){
  * )
  */
 Flight::route('GET /confirm/@token', function($token){
-  Flight::personService()->confirm($token);
-  Flight::json(["message" => "Account has been activated."]);
+  Flight::json(Flight::jwt(Flight::personService()->confirm($token)));
+  //Flight::personService()->confirm($token);
+  //Flight::json(["message" => "Account has been activated."]);
 });
 
 /**
@@ -87,9 +88,12 @@ Flight::route('POST /forgot', function(){
  * )
  */
 Flight::route('POST /reset', function(){
-  $data = Flight::request()->data->getData();
-  Flight::personService()->reset($data);
-  Flight::json(["message" => "Your password has been changed."]);
+
+  Flight::json(Flight::jwt(Flight::personService()->reset(Flight::request()->data->getData())));
+
+  //$data = Flight::request()->data->getData();
+  //Flight::personService()->reset($data);
+  //Flight::json(["message" => "Your password has been changed."]);
 });
 
 

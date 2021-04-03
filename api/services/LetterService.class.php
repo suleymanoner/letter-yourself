@@ -19,12 +19,20 @@ class LetterService extends BaseService{
     }
   }
 
-  public function get_letter($person_to_sent_id, $offset, $limit, $search, $order){
-    return $this->dao->get_letter($person_to_sent_id, $offset, $limit, $search, $order);
+
+
+
+  public function get_letter($account_id, $offset, $limit, $search, $order){
+    return $this->dao->get_letter($account_id, $offset, $limit, $search, $order);
+  }
+
+  public function get_letter5($offset, $limit, $search, $order){
+    return $this->dao->get_letter5($offset, $limit, $search, $order);
   }
 
 
-}
 
+
+}
 
 ?>

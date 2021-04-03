@@ -107,6 +107,8 @@ class PersonService extends BaseService{
 
     $this->dao->update($person['id'], ["status" => "ACTIVE", "token" => NULL]);
     $this->accountDao->update($person['account_id'], ["status" => "ACTIVE"]);
+
+    return $person;
   }
 
 
