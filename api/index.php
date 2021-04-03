@@ -37,10 +37,10 @@ Flight::map('header', function($name){
 
 /* utility function for generating JWT token */
 Flight::map('jwt', function($person){
-  $jwt = \Firebase\JWT\JWT::encode(["id" => $user["id"], "aid" => $user["account_id"], "r" => $user["role"]], Config::JWT_SECRET);
+  $jwt = \Firebase\JWT\JWT::encode(["exp" => (time() + Config::JWT_TOKEN_TIME),"id" => $user["id"], "aid" => $user["account_id"], "r" => $user["role"]], Config::JWT_SECRET);
   return ["token" => $jwt];
 });
-//"exp" => (time() + Config::JWT_TOKEN_TIME),
+//
 
 Flight::register('accountService','AccountService');
 Flight::register('personService','PersonService');

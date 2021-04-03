@@ -23,9 +23,11 @@ class PersonService extends BaseService{
     $db_person = $this->dao->get_person_by_token($person['token']);
     if(!isset($db_person['id'])) throw new Exception("Invalid token",400);
 
-    if (strtotime(date(Config::DATE_FORMAT)) - strtotime($db_person['created_at']) > 300) throw new Exception("Token time expired");
+    if (strtotime(date(Config::DATE_FORMAT)) - strtotime($db_person['token_created_at']) > 300) throw new Exception("Token time expired");
 
     $this->dao->update($db_person['id'], ['password' => md5($person['password']), 'token' => NULL]);
+
+    return $db_person;
 
   }
 

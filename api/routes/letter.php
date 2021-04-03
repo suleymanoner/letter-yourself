@@ -5,7 +5,7 @@
  *     @OA\Parameter(type="integer", in="query", name="limit", default=25, description="Limit for pagination"),
  *     @OA\Parameter(type="string", in="query", name="search", description="Search string for account. Case insensetive."),
  *     @OA\Parameter(type="string", in="query", name="order", default="-id", description="Sorting : '-column_name' ascending order, '+column_name' descending order"),
- *     @OA\Response(response="200", description="List email templates for user")
+ *     @OA\Response(response="200", description="List letters")
  * )
  */
 Flight::route('GET /person/letter', function(){
@@ -57,11 +57,12 @@ Flight::route('POST /person/letter', function(){
  *       @OA\MediaType(mediaType="application/json",
  *    			@OA\Schema(
  *    				 @OA\Property(property="title", required="true", type="string", example="My Letter",	description="Title of the letter" ),
- *    				 @OA\Property(property="send_date", required="true", type="string", example="2021-03-31 22:51:30",	description="Send date of your letter." )
+ *    				 @OA\Property(property="body", required="true", type="string", example="My Dear friend..",	description="Body of the letter" ),
+ *             @OA\Property(property="send_at", required="true", type="DATE_FORMAT", example="2021-03-31 22:15:00",	description="Send date of your letter" )
  *          )
  *       )
  *     ),
- *     @OA\Response(response="200", description="Update email template")
+ *     @OA\Response(response="200", description="Update letter")
  * )
  */
 Flight::route('PUT /person/letter/@id', function($id){
@@ -77,7 +78,7 @@ Flight::route('PUT /person/letter/@id', function($id){
  *     @OA\Parameter(type="integer", in="query", name="limit", default=25, description="Limit for pagination"),
  *     @OA\Parameter(type="string", in="query", name="search", description="Search string for account. Case insensetive."),
  *     @OA\Parameter(type="string", in="query", name="order", default="-id", description="Sorting : '-column_name' ascending order, '+column_name' descending order"),
- *     @OA\Response(response="200", description="List email templates for user")
+ *     @OA\Response(response="200", description="List letters")
  * )
  */
 Flight::route('GET /admin/letter', function(){
@@ -92,7 +93,7 @@ Flight::route('GET /admin/letter', function(){
 /**
  * @OA\Get(path="/admin/letter/{id}", tags={"x-admin", "letter"}, security={{"ApiKeyAuth": {}}},
  *     @OA\Parameter(type="integer", in="path", name="id", default=1, description="Id of letter"),
- *     @OA\Response(response="200", description="Fetch individual email template")
+ *     @OA\Response(response="200", description="Fetch individual letter.")
  * )
  */
 Flight::route('GET /admin/letter/@id', function($id){
@@ -105,14 +106,15 @@ Flight::route('GET /admin/letter/@id', function($id){
  *       @OA\MediaType(mediaType="application/json",
  *    			@OA\Schema(
  *    				 @OA\Property(property="title", required="true", type="string", example="My Letter",	description="Title of the letter" ),
- *    				 @OA\Property(property="send_date", required="true", type="string", example="2021-03-31 22:51:30",	description="Send date of your letter." )
+ *    				 @OA\Property(property="body", required="true", type="string", example="My Dear friend..",	description="Body of the letter" ),
+ *             @OA\Property(property="send_at", required="true", type="DATE_FORMAT", example="2021-03-31 22:15:00",	description="Send date of your letter" )
  *          )
  *       )
  *     ),
  *  @OA\Response(response="200", description="Saved letter info.")
  * )
  */
-Flight::route('POST /admin/person/letter', function(){
+Flight::route('POST /admin/letter', function(){
   $data = Flight::request()->data->getData();
   Flight::json(Flight::letterService()->add($data));
 });
@@ -125,11 +127,12 @@ Flight::route('POST /admin/person/letter', function(){
  *       @OA\MediaType(mediaType="application/json",
  *    			@OA\Schema(
  *    				 @OA\Property(property="title", required="true", type="string", example="My Letter",	description="Title of the letter" ),
- *    				 @OA\Property(property="send_date", required="true", type="string", example="2021-03-31 22:51:30",	description="Send date of your letter." )
+ *    				 @OA\Property(property="body", required="true", type="string", example="My Dear friend..",	description="Body of the letter" ),
+ *             @OA\Property(property="send_at", required="true", type="DATE_FORMAT", example="2021-03-31 22:15:00",	description="Send date of your letter" )
  *          )
  *       )
  *     ),
- *     @OA\Response(response="200", description="Update email template")
+ *     @OA\Response(response="200", description="Updated letter")
  * )
  */
 Flight::route('PUT /admin/letter/@id', function($id){
