@@ -19,6 +19,15 @@ class CommunicationService extends BaseService{
   }
 
 
+  public function update_letter($person, $id, $letter){
+    $db_communication = $this->dao->get_by_id($id);
+    //print_r($db_communication); die;
+    if($db_communication['account_id'] != $person['aid']){
+      return [];
+    }
+    return $this->update($id, $letter);
+  }
+
 
 
 

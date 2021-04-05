@@ -31,7 +31,7 @@ class LetterDao extends BaseDao{
   }
 
 
-  public function get_letter5($offset, $limit, $search, $order){
+  public function get_letter5($account_id, $offset, $limit, $search, $order){
 
     list($order_column, $order_direction) = self::parse_order($order);
     $params = [];
@@ -42,16 +42,14 @@ class LetterDao extends BaseDao{
                WHERE 1 = 1 ";
 
 
-    /*
     if ($account_id){
       $params["communication.account_id"] = $account_id;
-
       $query2 .= "AND communication.account_id = :account_id ";
     }
-    */
+
 
     if (isset($search)){
-      $query2 .= "AND ( LOWER(title) LIKE CONCAT('%', :search, '%') OR LOWER(send_at) LIKE CONCAT('%', :search, '%'))";
+      $query2 .= "AND ( LOWER(title) LIKE CONCAT('%', :search, '%') OR LOWER(send_at) LIKE CONCAT('%', :search, '%')) ";
       $params['search'] = strtolower($search);
     }
 

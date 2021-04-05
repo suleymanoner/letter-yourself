@@ -8,18 +8,17 @@ class CommunicationDao extends BaseDao{
   }
 
 
-  public function get_letterComm($persons_id, $offset, $limit, $search, $order){
+  public function get_letterComm($account_id, $offset, $limit, $search, $order){
 
     list($order_column, $order_direction) = self::parse_order($order);
 
 
-    $params2 = ["communication.persons_id" => $persons_id];
+    $params2 = ["communication.account_id" => $account_id];
 
     $query2 = "SELECT letter.id, letter.title, letter.body, letter.photograph, letter.created_at, letter.send_at
                FROM letter
                JOIN communication ON letter.id = communication.letter_id
-               WHERE communication.persons_id = :persons_id ";
-
+               WHERE communication.account_id = :account_id ";
 
 
     if(isset($search)){

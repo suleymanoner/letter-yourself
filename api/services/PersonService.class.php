@@ -3,19 +3,21 @@
 require_once dirname(__FILE__).'/BaseService.class.php';
 require_once dirname(__FILE__).'/../dao/PersonDao.class.php';
 require_once dirname(__FILE__).'/../dao/AccountDao.class.php';
+require_once dirname(__FILE__).'/../dao/CommunicationDao.class.php';
 require_once dirname(__FILE__).'/../clients/SMTPClient.class.php';
 
-use \Firebase\JWT\JWT;
 
 class PersonService extends BaseService{
 
   private $accountDao;
   private $smtpClient;
+  private $communicationDao;
 
   public function __construct(){
     $this->dao = new PersonDao();
     $this->accountDao = new AccountDao();
     $this->smtpClient = new SMTPClient();
+    $this->communicationDao = new CommunicationDao();
   }
 
   public function reset($person){
@@ -43,6 +45,21 @@ class PersonService extends BaseService{
 
       $this->smtpClient->send_person_recovery_token($db_person);
 
+  }
+
+  public function login2($person){
+    $db_person = $this->dao->get_person_by_email($person['email']);
+
+    //print_r($db_person); die;
+
+    if(!isset($db_person['id'])) throw new Exception("Person doesn't exist", 400);
+    if($db_person['status'] != 'ACTIVE') throw new Exception("Person doesn't active.");
+
+    $account = $this->accountDao->get_by_id($db_person['account_id']);
+    if(!isset($account['id']) || $account['status'] != 'ACTIVE') throw new Exception("Account doesn't exist", 400);
+    if($db_person['password'] != md5($person['password'])) throw new Exception("Invalid password.", 400);
+
+    return $db_person;
   }
 
 

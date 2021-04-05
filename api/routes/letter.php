@@ -10,13 +10,13 @@
  */
 Flight::route('GET /person/letter', function(){
   //not works, there is problem with setting person, check
-  //$account_id = Flight::get('person')['aid'];
+  $account_id = Flight::get('person')['aid'];
 
   $offset = Flight::query('offset', 0);
   $limit = Flight::query('limit', 10);
   $search = Flight::query('search');
   $order = Flight::query('order', '-id');
-  Flight::json(Flight::letterService()->get_letter5($offset, $limit, $search, $order));
+  Flight::json(Flight::letterService()->get_letter5($account_id, $offset, $limit, $search, $order));
 });
 
 /**
@@ -66,14 +66,15 @@ Flight::route('POST /person/letter', function(){
  * )
  */
 Flight::route('PUT /person/letter/@id', function($id){
-  $data = Flight::request()->data->getData();
-  Flight::json(Flight::letterService()->update($id, $data));
+  //Flight::json(Flight::letterService()->update($id, $data));
+  Flight::json(Flight::communicationService()->update_letter(Flight::get('person'), $id, Flight::request()->data->getData() ));
 });
 
 
 
 /**
  * @OA\Get(path="/admin/letter", tags={"x-admin", "letter"}, security={{"ApiKeyAuth": {}}},
+ *     @OA\Parameter(type="integer", in="query", name="account_id", default=0, description="Account id"),
  *     @OA\Parameter(type="integer", in="query", name="offset", default=0, description="Offset for pagination"),
  *     @OA\Parameter(type="integer", in="query", name="limit", default=25, description="Limit for pagination"),
  *     @OA\Parameter(type="string", in="query", name="search", description="Search string for account. Case insensetive."),
@@ -82,12 +83,12 @@ Flight::route('PUT /person/letter/@id', function($id){
  * )
  */
 Flight::route('GET /admin/letter', function(){
-//$account_id = Flight::get('person')['aid'];
+  $account_id = Flight::query('account_id');
   $offset = Flight::query('offset', 0);
   $limit = Flight::query('limit', 10);
   $search = Flight::query('search');
   $order = Flight::query('order', '-id');
-  Flight::json(Flight::letterService()->get_letter5($offset, $limit, $search, $order));
+  Flight::json(Flight::letterService()->get_letter5($account_id, $offset, $limit, $search, $order));
 });
 
 /**
@@ -105,6 +106,7 @@ Flight::route('GET /admin/letter/@id', function($id){
  *   @OA\RequestBody(description="Basic letter info", required=true,
  *       @OA\MediaType(mediaType="application/json",
  *    			@OA\Schema(
+ *    				 @OA\Property(property="account_id", required="true", type="integer", example=1,	description="Id of account" ),
  *    				 @OA\Property(property="title", required="true", type="string", example="My Letter",	description="Title of the letter" ),
  *    				 @OA\Property(property="body", required="true", type="string", example="My Dear friend..",	description="Body of the letter" ),
  *             @OA\Property(property="send_at", required="true", type="DATE_FORMAT", example="2021-03-31 22:15:00",	description="Send date of your letter" )
@@ -115,8 +117,7 @@ Flight::route('GET /admin/letter/@id', function($id){
  * )
  */
 Flight::route('POST /admin/letter', function(){
-  $data = Flight::request()->data->getData();
-  Flight::json(Flight::letterService()->add($data));
+  Flight::json(Flight::letterService()->add(Flight::request()->data->getData()));
 });
 
 
@@ -136,8 +137,7 @@ Flight::route('POST /admin/letter', function(){
  * )
  */
 Flight::route('PUT /admin/letter/@id', function($id){
-  $data = Flight::request()->data->getData();
-  Flight::json(Flight::letterService()->update($id, $data));
+  Flight::json(Flight::letterService()->update($id, Flight::request()->data->getData()));
 });
 
 

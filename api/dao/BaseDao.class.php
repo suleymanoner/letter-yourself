@@ -45,7 +45,7 @@ class BaseDao{
     };
 
     $order_column = substr($order, 1);
-    // TODO search for sql injection on internet
+    //$order_column = trim($this->connection->quote(substr($order, 1)),"'");
     return [$order_column, $order_direction];
   }
 
