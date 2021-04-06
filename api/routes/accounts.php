@@ -3,7 +3,8 @@
 /**
  * @OA\Info(title="LetterYourself API", version="0.1")
  * @OA\OpenApi(
- *   @OA\Server(url="http://localhost/letteryourself/api/", description="Development Environment")
+ *   @OA\Server(url="http://localhost/letteryourself/api/", description="Development Environment"),
+ *   @OA\Server(url="https://ly.letteryourself.live/api/", description="Production Environment")
  * ),
  * @OA\SecurityScheme(
  *      securityScheme="ApiKeyAuth",
