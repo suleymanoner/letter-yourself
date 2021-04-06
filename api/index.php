@@ -16,8 +16,6 @@ require_once dirname(__FILE__).'/services/CommunicationService.class.php';
 
 //Flight::set('flight.log_errors', TRUE);
 
-use \Firebase\JWT\JWT;
-
 /* Error handling for API
 Flight::map('error', function(Exception $ex){
   // it is handles error and changes html format to application/json format.
@@ -32,7 +30,6 @@ Flight::map('query', function($name, $default_value = NULL){
   return $query_param;
 });
 
-
 Flight::map('header', function($name){
   $headers = getallheaders();
   return @$headers[$name];
@@ -43,14 +40,6 @@ Flight::map('jwt', function($person){
   $jwt = \Firebase\JWT\JWT::encode(["exp" => (time() + Config::JWT_TOKEN_TIME),"id" => $person["id"], "aid" => $person["account_id"], "r" => $person["role"]], Config::JWT_SECRET);
   return ["token" => $jwt];
 });
-//
-
-Flight::register('accountService','AccountService');
-Flight::register('personService','PersonService');
-Flight::register('letterService','LetterService');
-Flight::register('receiverService','ReceiverService');
-Flight::register('communicationService','CommunicationService');
-
 
 Flight::route('GET /swagger', function(){
   $openapi = @\OpenApi\scan(dirname(__FILE__).'/routes');
@@ -58,11 +47,15 @@ Flight::route('GET /swagger', function(){
   echo $openapi->toJson();
 });
 
-
 Flight::route('GET /', function(){
   Flight::redirect('/docs');
 });
 
+Flight::register('accountService','AccountService');
+Flight::register('personService','PersonService');
+Flight::register('letterService','LetterService');
+Flight::register('receiverService','ReceiverService');
+Flight::register('communicationService','CommunicationService');
 
 
 Flight::start();

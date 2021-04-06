@@ -10,24 +10,17 @@ class CommunicationService extends BaseService{
   }
 
 
-  public function get_letterComm($persons_id, $offset, $limit, $search, $order){
-    return $this->dao->get_letterComm($persons_id, $offset, $limit, $search, $order);
-  }
-
-  public function get_letter_with_persons_id($id){
-    return $this->dao->get_letter_with_persons_id($id);
-  }
-
-
-  public function update_letter($person, $id, $letter){
-    $db_communication = $this->dao->get_by_id($id);
-    //print_r($db_communication); die;
-    if($db_communication['account_id'] != $person['aid']){
-      return [];
+  public function add_communication($letter_id, $receiver_id){
+    try {
+      $data = [
+        "letter_id" => $letter_id['id'],
+        "receiver_id" => $receiver_id['id']
+      ];
+      return parent::add($data);
+    } catch (\Exception $e) {
+      throw $e;
     }
-    return $this->update($id, $letter);
   }
-
 
 
 

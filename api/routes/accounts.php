@@ -85,28 +85,19 @@ Flight::route('PUT /admin/accounts/@id', function($id){
  */
 Flight::route('GET /person/account', function(){
 
-/*
-  $headers = getallheaders();
-  $token = @$headers['Authentication'];
-  try {
-    $person = (array)\Firebase\JWT\JWT::decode($token, Config::JWT_SECRET, ['HS256']);
-    Flight::set('person', $person);
-    return TRUE;
-  } catch (\Exception $e) {
-    print_r($e); die;
-  }
-
+  /*
   $b = json_encode(Flight::get('person')['aid']);
   print_r($b); die;
-  */
 
-  // not works, because there is problem with setting person, check
+  not works, because there is problem with setting person, check
 
-  //$a = Flight::get('person');
-  //if(!isset($a)) throw new Exception("There is problem with setting person");
+  $a = Flight::get('person');
+  if(!isset($a)) throw new Exception("There is problem with setting person");
 
+  Flight::json(Flight::accountService()->get_by_id(1)); */
 
-  Flight::json(Flight::accountService()->get_by_id(Flight::get('person')['id']));
+  $account_id = 1;  //Flight::get('person')['aid'];
+  Flight::json(Flight::accountService()->get_by_id($account_id));
 });
 
 ?>

@@ -10,35 +10,43 @@ class LetterService extends BaseService{
     $this->dao = new LetterDao();
   }
 
-  public function add($letter){
+  public function add_letter($account_id, $letter){
     try {
-      $letter['created_at'] = date(Config::DATE_FORMAT);
-      return parent::add($letter);
+      $data = [
+        "title" => $letter["title"],
+        "body" => $letter["body"],
+        "created_at" => date(Config::DATE_FORMAT),
+        "send_at" => $letter["send_at"],
+        "account_id" => $account_id
+      ];
+      return parent::add($data);
     } catch (\Exception $e) {
       throw $e;
     }
   }
 
 
-
+  public function get_letter_id_by_title($title){
+    return $this->dao->get_letter_id_by_title($title);
+  }
 
   public function get_letter($account_id, $offset, $limit, $search, $order){
     return $this->dao->get_letter($account_id, $offset, $limit, $search, $order);
   }
 
-  public function get_letter5($account_id, $offset, $limit, $search, $order){
-    return $this->dao->get_letter5($account_id, $offset, $limit, $search, $order);
+  public function get_letter_with_account_and_letter_id($account_id, $id){
+    return $this->dao->get_letter_with_account_and_letter_id($account_id, $id);
   }
 
 
   public function update_letter($person, $id, $letter){
-    $db_person = $this->dao->get_by_id($id);
-    print_r($db_person); die;
-    //if($db_person['']);
-
+    $db_template = $this->dao->get_by_id($id);
+    //$person['aid']
+    if ($db_template['account_id'] != $person){
+      throw new Exception("Invalid letter", 403);
+    }
+    return $this->update($id, $letter);
   }
-
-
 
 
 }
