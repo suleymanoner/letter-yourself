@@ -9,9 +9,9 @@ class SMTPClient{
   private $mailer;
 
   public function __construct(){
-    $transport = (new Swift_SmtpTransport(Config::SMTP_HOST, Config::SMTP_PORT, 'tls'))
-      ->setUsername(Config::SMTP_USER)
-      ->setPassword(Config::SMTP_PASSWORD)
+    $transport = (new Swift_SmtpTransport(Config::SMTP_HOST(), Config::SMTP_PORT(), 'tls'))
+      ->setUsername(Config::SMTP_USER())
+      ->setPassword(Config::SMTP_PASSWORD())
     ;
     $this->mailer = new Swift_Mailer($transport);
   }
@@ -22,7 +22,7 @@ class SMTPClient{
     $message = (new Swift_Message('Confirm your account'))
       ->setFrom(['suyo571oner@gmail.com' => 'LetterYourself'])
       ->setTo([$person['email']])
-      ->setBody('Here is the confirmation link: http://localhost/letteryourself/api/persons/confirm/'.$person['token']);
+      ->setBody('Here is the confirmation token: '.$person['token']);
 
     $this->mailer->send($message);
   }
