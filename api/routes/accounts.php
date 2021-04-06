@@ -84,19 +84,7 @@ Flight::route('PUT /admin/accounts/@id', function($id){
  * )
  */
 Flight::route('GET /person/account', function(){
-
-  /*
-  $b = json_encode(Flight::get('person')['aid']);
-  print_r($b); die;
-
-  not works, because there is problem with setting person, check
-
-  $a = Flight::get('person');
-  if(!isset($a)) throw new Exception("There is problem with setting person");
-
-  Flight::json(Flight::accountService()->get_by_id(1)); */
-
-  $account_id = 1;  //Flight::get('person')['aid'];
+  $account_id = Flight::get('person')['aid'];
   Flight::json(Flight::accountService()->get_by_id($account_id));
 });
 

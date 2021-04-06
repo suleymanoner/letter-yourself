@@ -29,9 +29,6 @@ class ReceiverService extends BaseService{
     return $this->dao->get_receiver_id_by_email($receiver_email);
   }
 
-
 }
-
-
 
 ?>

@@ -9,9 +9,7 @@
  * )
  */
 Flight::route('GET /person/letter', function(){
-  //not works, there is problem with setting person, check
-  //$account_id = Flight::get('person')['aid'];
-  $account_id = 1;
+  $account_id = Flight::get('person')['aid'];;
   $offset = Flight::query('offset', 0);
   $limit = Flight::query('limit', 10);
   $search = Flight::query('search');
@@ -26,8 +24,7 @@ Flight::route('GET /person/letter', function(){
  * )
  */
 Flight::route('GET /person/letter/@id', function($letter_id){
-  //$account_id = Flight::get('person')['aid'];
-  $account_id = 1;
+  $account_id = Flight::get('person')['aid'];
   Flight::json(Flight::letterService()->get_letter_with_account_and_letter_id($account_id , $letter_id));
 });
 
@@ -47,8 +44,7 @@ Flight::route('GET /person/letter/@id', function($letter_id){
  * )
  */
 Flight::route('POST /person/letter', function(){
-  //$account_id = Flight::get('person')['aid'];
-  $account_id = 32;
+  $account_id = Flight::get('person')['aid'];
 
   $receiver_email = Flight::request()->data->getData()['receiver_email'];
   Flight::receiverService()->add_receiver($receiver_email);
@@ -77,9 +73,7 @@ Flight::route('POST /person/letter', function(){
  * )
  */
 Flight::route('PUT /person/letter/@id', function($id){
-  //Flight::json(Flight::letterService()->update($id, $data));
-  //Flight::get('person') , this will be replaced with 32
-  Flight::json(Flight::letterService()->update_letter(32, $id, Flight::request()->data->getData()));
+  Flight::json(Flight::letterService()->update_letter(Flight::get('person'), $id, Flight::request()->data->getData()));
 });
 
 

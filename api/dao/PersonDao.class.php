@@ -20,6 +20,5 @@ class PersonDao extends BaseDao{
   }
 
 
-
 }
 ?>

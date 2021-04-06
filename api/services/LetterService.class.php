@@ -38,16 +38,13 @@ class LetterService extends BaseService{
     return $this->dao->get_letter_with_account_and_letter_id($account_id, $id);
   }
 
-
   public function update_letter($person, $id, $letter){
     $db_template = $this->dao->get_by_id($id);
-    //$person['aid']
-    if ($db_template['account_id'] != $person){
+    if ($db_template['account_id'] != $person['aid']){
       throw new Exception("Invalid letter", 403);
     }
     return $this->update($id, $letter);
   }
-
 
 }
 

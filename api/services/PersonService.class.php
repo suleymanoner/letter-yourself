@@ -47,10 +47,8 @@ class PersonService extends BaseService{
 
   }
 
-  public function login2($person){
+  public function login($person){
     $db_person = $this->dao->get_person_by_email($person['email']);
-
-    //print_r($db_person); die;
 
     if(!isset($db_person['id'])) throw new Exception("Person doesn't exist", 400);
     if($db_person['status'] != 'ACTIVE') throw new Exception("Person doesn't active.");
@@ -60,24 +58,6 @@ class PersonService extends BaseService{
     if($db_person['password'] != md5($person['password'])) throw new Exception("Invalid password.", 400);
 
     return $db_person;
-  }
-
-
-  public function login($person){
-    $db_person = $this->dao->get_person_by_email($person['email']);
-
-    if(!isset($db_person['id'])) throw new Exception("Person doesn't exist", 400);
-
-    if($db_person['status'] != 'ACTIVE') throw new Exception("Person doesn't active.");
-
-    $account = $this->accountDao->get_by_id($db_person['account_id']);
-    if(!isset($account['id']) || $account['status'] != 'ACTIVE') throw new Exception("Account doesn't exist", 400);
-
-    if($db_person['password'] != md5($person['password'])) throw new Exception("Invalid password.", 400);
-
-    $jwt = \Firebase\JWT\JWT::encode(["id" => $db_person["id"], "aid" => $db_person["account_id"], "r" => $db_person["role"]], Config::JWT_SECRET);
-
-    return ["token" => $jwt];
   }
 
 
@@ -115,7 +95,6 @@ class PersonService extends BaseService{
     }
 
     $this->smtpClient->send_register_token($person);
-
     return $person;
   }
 
@@ -129,7 +108,6 @@ class PersonService extends BaseService{
 
     return $person;
   }
-
 
 }
 

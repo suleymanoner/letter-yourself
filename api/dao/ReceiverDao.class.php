@@ -16,8 +16,6 @@ class ReceiverDao extends BaseDao{
     return $this->query_unique("SELECT id FROM receiver WHERE receiver_email = :email", ["email" => $receiver_email]);
   }
 
-
 }
-
 
 ?>

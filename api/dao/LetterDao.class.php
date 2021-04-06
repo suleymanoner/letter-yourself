@@ -41,10 +41,6 @@ class LetterDao extends BaseDao{
     return $this->query_unique("SELECT id FROM letter WHERE title = :title", ["title" => $title]);
   }
 
-
-
 }
-
-
 
 ?>

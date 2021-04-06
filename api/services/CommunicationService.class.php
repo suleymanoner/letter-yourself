@@ -9,7 +9,6 @@ class CommunicationService extends BaseService{
     $this->dao = new CommunicationDao();
   }
 
-
   public function add_communication($letter_id, $receiver_id){
     try {
       $data = [
@@ -22,13 +21,6 @@ class CommunicationService extends BaseService{
     }
   }
 
-
-
-
-
 }
-
-
-
 
 ?>

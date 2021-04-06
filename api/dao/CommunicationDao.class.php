@@ -7,8 +7,6 @@ class CommunicationDao extends BaseDao{
     parent::__construct("communication");
   }
 
-
-
 }
 
 ?>
