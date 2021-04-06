@@ -79,7 +79,7 @@ Flight::route('PUT /admin/accounts/@id', function($id){
 
 
 /**
- * @OA\Get(path="/person/account", tags={"x-person", "persons"}, security={{"ApiKeyAuth": {}}},
+ * @OA\Get(path="/person/account", tags={"x-person", "account"}, security={{"ApiKeyAuth": {}}},
  *     @OA\Response(response="200", description="Fetch user account")
  * )
  */

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @OA\Post( path="/register", tags={"persons"},
+ * @OA\Post( path="/register", tags={"login"},
  *    @OA\RequestBody(description="Person info", required=true,
  *        @OA\MediaType(
  *            mediaType="application/json",
@@ -23,7 +23,7 @@ Flight::route('POST /register', function(){
 });
 
 /**
- * @OA\Get( path="/confirm/{token}", tags={"persons"},
+ * @OA\Get( path="/confirm/{token}", tags={"login"},
  *     @OA\Parameter( type="string", in="path", name="token", default=12345, description="Temporary token for activate account"),
  *     @OA\Response(response="200", description="Successfull activation.")
  * )
@@ -33,7 +33,7 @@ Flight::route('GET /confirm/@token', function($token){
 });
 
 /**
- * @OA\Post( path="/login", tags={"persons"},
+ * @OA\Post( path="/login", tags={"login"},
  *    @OA\RequestBody(description="Person info", required=true,
  *        @OA\MediaType(
  *            mediaType="application/json",
@@ -51,7 +51,7 @@ Flight::route('POST /login', function(){
 });
 
 /**
- * @OA\Post( path="/forgot", tags={"persons"}, description="Send recovery email",
+ * @OA\Post( path="/forgot", tags={"login"}, description="Send recovery email",
  *    @OA\RequestBody(description="Person info", required=true,
  *        @OA\MediaType(
  *            mediaType="application/json",
@@ -69,7 +69,7 @@ Flight::route('POST /forgot', function(){
 });
 
 /**
- * @OA\Post( path="/reset", tags={"persons"}, description="Reset password using recovery token",
+ * @OA\Post( path="/reset", tags={"login"}, description="Reset password using recovery token",
  *    @OA\RequestBody(description="Person info", required=true,
  *        @OA\MediaType(
  *            mediaType="application/json",
