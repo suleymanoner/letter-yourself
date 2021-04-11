@@ -57,10 +57,10 @@ class PersonService extends BaseService{
     if(!isset($account['id']) || $account['status'] != 'ACTIVE') throw new Exception("Account doesn't exist", 400);
     if($db_person['password'] != md5($person['password'])) throw new Exception("Invalid password.", 400);
 
-    $jwt = \Firebase\JWT\JWT::encode(["exp" => (time() + Config::JWT_TOKEN_TIME),"id" => $person["id"], "aid" => $person["account_id"], "r" => $person["role"]], Config::JWT_SECRET);
-    return ["token" => $jwt];
+    //$jwt = \Firebase\JWT\JWT::encode(["exp" => (time() + Config::JWT_TOKEN_TIME),"id" => $person["id"], "aid" => $person["account_id"], "r" => $person["role"]], Config::JWT_SECRET);
+    //return ["token" => $jwt];
 
-    //return $db_person;
+    return $db_person;
   }
 
 
