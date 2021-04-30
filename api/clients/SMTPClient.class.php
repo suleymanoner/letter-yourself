@@ -22,7 +22,7 @@ class SMTPClient{
     $message = (new Swift_Message('Confirm your account'))
       ->setFrom(['suyo571oner@gmail.com' => 'LetterYourself'])
       ->setTo([$person['email']])
-      ->setBody('Here is the confirmation token: '.$person['token']);
+      ->setBody('Here is the confirmation token: http://localhost/letteryourself/api/confirm/'.$person['token']);
 
     $this->mailer->send($message);
   }
@@ -31,7 +31,7 @@ class SMTPClient{
     $message = (new Swift_Message('Reset your account'))
       ->setFrom(['suyo571oner@gmail.com' => 'LetterYourself'])
       ->setTo([$person['email']])
-      ->setBody('Here is the recovery token: '.$person['token']);
+      ->setBody('Here is the recovery token: http://localhost/letteryourself/login.html?token='.$person['token']);
 
     $this->mailer->send($message);
   }
