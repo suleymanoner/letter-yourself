@@ -7,6 +7,39 @@
             <!-- /.col-lg-12 -->
         </div>
         <!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <form role="form" id="add-letter">
+
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="title" class="form-control" placeholder="Title of your letter" required minlength="2">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Send date</label>
+                        <input type="datetime-local" name="send_at" class="form-control" required min="2021-05-11T00:00">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Letter Body</label>
+                        <textarea name="body" class="form-control" rows="15" required minlength="3"></textarea>
+                    </div>
+
+                  
+                  <div class="form-group">
+                      <label>Receiver email</label>
+                      <input type="email" name="receiver_email" class="form-control" required">
+                  </div>
+
+                    <button type="submit" class="btn btn-default">Submit Button</button>
+                    <button type="reset" class="btn btn-default">Reset Button</button>
+                </form>
+            </div>
+            <!-- /.col-lg-12 (nested) -->
+        </div>
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
@@ -28,7 +61,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                              
+
                                 </tbody>
                             </table>
                         </div>
@@ -48,7 +81,33 @@
 
 <<script type="text/javascript">
 
+
+
+  $("#add-letter").validate({
+  submitHandler: function(form, event) {
+    event.preventDefault();
+
+    console.log(jsonize_form($(form)));
+    addLetter(jsonize_form($(form)));
+   }
+  });
+
   getLetters();
+
+  function addLetter(letter){
+    $.ajax({
+         url: "api/person/letter",
+         type: "POST",
+         data: letter,
+         beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"));},
+         success: function(data) {
+           console.log(data);
+         },
+         error: function(jqXHR, textStatus, errorThrown){
+           console.log(jqXHR);
+         }
+      });
+  }
 
   function getLetters(){
 
