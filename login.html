@@ -227,6 +227,7 @@
               window.location = "index.html";
             }).fail(function(error) {
               $("#login-link").prop('disabled',false);
+              console.log(error);
               toastr.error(error.responseJSON.message);
             });
           }
@@ -254,7 +255,7 @@
               "password" : $("#change-password").val(),
             }; */
 
-            
+
             $("#change-link").prop('disabled',true);
             $.post("api/reset", jsonize_form("#change-form")).done(function(data) {
               window.localStorage.setItem("token", data.token);
