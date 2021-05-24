@@ -117,6 +117,34 @@
 
   function getLetters(){
 
+    $("#letters-table").DataTable({
+      "processing" : true,
+      "serverSide" : true,
+      "ajax" : {
+        url: "api/person/letter?order=",
+        type: "GET",
+        beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"));},
+        dataSrc : "",
+        data : function ( d ) {
+          d.offset = d.start;
+          d.limit = d.length;
+          d.search = d.search.value;
+          d.order = encodeURIComponent((d.order[0].dir == 'asc' ? "-" : "+")+ d.columns[d.order[0].column].data);
+
+          console.log(d);
+        }
+      },
+      columns : [
+          { "data" : "id"},
+          { "data" : "title"},
+          { "data" : "body"},
+          { "data" : "created_at"},
+          { "data" : "send_at"},
+          { "data" : "account_id"}
+      ]
+    });
+
+/*
     $.ajax({
          url: "api/person/letter?order="+encodeURIComponent("+id"),
          type: "GET",
@@ -140,7 +168,7 @@
 
 
          }
-      });
+      }); */
 
 
 
