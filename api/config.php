@@ -19,16 +19,16 @@ class config{
     return Config::get_env("DB_PORT", "3306");
   }
   public static function SMTP_HOST(){
-    return Config::get_env("SMTP_HOST", "smtp.eu.mailgun.org");
+    return Config::get_env("SMTP_HOST", "smtp.gmail.com");
   }
   public static function SMTP_PORT(){
     return Config::get_env("SMTP_PORT", "587");
   }
   public static function SMTP_USER(){
-    return Config::get_env("SMTP_USER", NULL);
+    return Config::get_env("SMTP_USER", "");
   }
   public static function SMTP_PASSWORD(){
-    return Config::get_env("SMTP_PASSWORD", NULL);
+    return Config::get_env("SMTP_PASSWORD", "");
   }
 
   const JWT_SECRET = "A9VnfvrJYZrpwbZKjTNI";
