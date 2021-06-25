@@ -18,6 +18,19 @@ Flight::route('GET /person/letter', function(){
 });
 
 /**
+ * @OA\Get(path="/person/letter/receiver/{id}", tags={"x-person", "letter"}, security={{"ApiKeyAuth": {}}},
+ *     @OA\Parameter(type="integer", in="path", name="id", default=1, description="Id of letter"),
+ *     @OA\Response(response="200", description="Fetch receiver id")
+ * )
+ */
+Flight::route('GET /person/letter/receiver/@id', function($letter_id){
+  $receiver_id_array = Flight::communicationService()->get_receiver_id_by_letter_id($letter_id);
+  $receiver_id = $receiver_id_array['receiver_id'];
+  Flight::json(Flight::receiverService()->get_receiver_email_with_id($receiver_id));
+});
+
+
+/**
  * @OA\Get(path="/person/letter/{id}", tags={"x-person", "letter"}, security={{"ApiKeyAuth": {}}},
  *     @OA\Parameter(type="integer", in="path", name="id", default=1, description="Id of letter"),
  *     @OA\Response(response="200", description="Fetch individual letter")
@@ -53,7 +66,7 @@ Flight::route('POST /person/letter', function(){
   Flight::json(Flight::letterService()->add_letter($account_id, Flight::request()->data->getData()));
 
   $letter_id = Flight::letterService()->get_letter_id_by_title(Flight::request()->data->getData()['title']);
-  Flight::communicationService()->add_communication($letter_id, $receiver_id);
+  Flight::communicationService()->add_communication($letter_id, $receiver_id, $account_id);
 });
 
 
@@ -65,7 +78,8 @@ Flight::route('POST /person/letter', function(){
  *    			@OA\Schema(
  *    				 @OA\Property(property="title", required="true", type="string", example="My Letter",	description="Title of the letter" ),
  *    				 @OA\Property(property="body", required="true", type="string", example="My Dear friend..",	description="Body of the letter" ),
- *             @OA\Property(property="send_at", required="true", type="DATE_FORMAT", example="2021-03-31 22:15:00",	description="Send date of your letter" )
+ *             @OA\Property(property="send_at", required="true", type="DATE_FORMAT", example="2021-03-31 22:15:00",	description="Send date of your letter" ),
+ *             @OA\Property(property="receiver_email", required="true", type="string", example="hello@galp.com",	description="Receiver email of letter" ),
  *          )
  *       )
  *     ),
@@ -73,7 +87,28 @@ Flight::route('POST /person/letter', function(){
  * )
  */
 Flight::route('PUT /person/letter/@id', function($id){
-  Flight::json(Flight::letterService()->update_letter(Flight::get('person'), $id, Flight::request()->data->getData()));
+  /*
+  $title = Flight::request()->data->getData()['title'];
+  $body = Flight::request()->data->getData()['body'];
+  $send_at = Flight::request()->data->getData()['send_at'];
+
+  //print_r($title); die;
+
+  $receiver_id_array = Flight::communicationService()->get_receiver_id_by_letter_id($id);
+  $receiver_id = $receiver_id_array['receiver_id'];
+  print_r($receiver_id); die;
+  $email_array = Flight::receiverService()->get_receiver_email_with_id($receiver_id);
+  $email = $email_array['receiver_email'];
+
+  Flight::receiverService()->update_receiver_email($email, $receiver_id);
+  Flight::letterService()->update_letter_new($id, $title, $body, $send_at);  */
+
+  $receiver_id_array = Flight::communicationService()->get_receiver_id_by_letter_id($id);
+  $receiver_id = $receiver_id_array['receiver_id'];
+
+  Flight::receiverService()->update_receiver_email(Flight::request()->data['receiver_email'],  $receiver_id);
+  Flight::letterService()->update_letter_new($id, Flight::request()->data['title'], Flight::request()->data['body'], Flight::request()->data['send_at'] );
+  //Flight::json(Flight::letterService()->update_letter(Flight::get('person'), $id, Flight::request()->data->getData()));
 });
 
 
@@ -154,6 +189,32 @@ Flight::route('POST /admin/letter', function(){
 Flight::route('PUT /admin/letter/@id', function($id){
   Flight::json(Flight::letterService()->update($id, Flight::request()->data->getData()));
 });
+
+
+/**
+ * @OA\Get(path="/person/communication", tags={"communication"}, security={{"ApiKeyAuth": {}}},
+ *     @OA\Response(response="200", description="List of communications")
+ * )
+ */
+Flight::route('GET /person/communication', function(){
+  $account_id = Flight::get('person')['aid'];
+  Flight::json(Flight::communicationService()->get_all($account_id));
+});
+
+
+
+/**
+ * @OA\Get(path="/person/receiver/{id}", tags={"receiver"}, security={{"ApiKeyAuth": {}}},
+ *     @OA\Parameter(type="integer", in="path", name="id", default=1, description="Id of receiver"),
+ *     @OA\Response(response="200", description="Get receiver by id")
+ * )
+ */
+Flight::route('GET /person/receiver/@id', function($id){
+  Flight::json(Flight::receiverService()->get_receiver_email_with_id($id));
+});
+
+
+
 
 
 ?>

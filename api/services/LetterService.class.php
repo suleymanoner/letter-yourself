@@ -46,6 +46,12 @@ class LetterService extends BaseService{
     return $this->update($id, $letter);
   }
 
+  public function update_letter_new($id, $title, $body, $send_at){
+    return $this->dao->update_letter_new($id, $title, $body, $send_at);
+  }
+
+
+
 }
 
 ?>

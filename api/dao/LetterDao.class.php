@@ -41,6 +41,11 @@ class LetterDao extends BaseDao{
     return $this->query_unique("SELECT id FROM letter WHERE title = :title", ["title" => $title]);
   }
 
+  public function update_letter_new($id, $title, $body, $send_at){
+    return $this->query_unique("UPDATE letter SET title = :title, body = :body, send_at = :send_at
+       WHERE id = :id", ["title" => $title, "body" => $body, "send_at" => $send_at, "id" => $id ]);
+  }
+
 }
 
 ?>

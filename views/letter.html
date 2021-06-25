@@ -8,7 +8,7 @@
         </div>
         <!-- /.row -->
 
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add-letter-modal">
+        <button type="button" class="btn btn-success" onclick="openAddForm()" data-toggle="modal" data-target="#add-letter-modal">
             Add Letter
         </button>
         <br>
@@ -22,27 +22,41 @@
                           <th>ID</th>
                           <th>Title</th>
                           <th>Body</th>
-                          <th>Created At</th>
                           <th>Send At</th>
-                          <th>Account ID</th>
                       </tr>
                   </thead>
-                  <tbody>
-
-                  </tbody>
               </table>
           </div>
           <!-- /.table-responsive -->
         </div>
+
+        <div class="row">
+          <div class="table-responsive">
+              <table id="communication-table" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                  <thead>
+                      <tr>
+                          <th>Letter ID</th>
+                          <th>Receiver Email</th>
+                      </tr>
+                  </thead>
+              </table>
+          </div>
+          <!-- /.table-responsive -->
+        </div>
+
+
         <!-- /.row -->
+
     </div>
     <!-- /.container-fluid -->
 </div>
 <!-- /#page-wrapper -->
+
 <div class="modal fade" id="add-letter-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
           <form role="form" id="add-letter">
+            <input type="hidden" name="id" />
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">Add Letter</h4>
@@ -64,7 +78,7 @@
                       <textarea name="body" class="form-control" rows="15" required minlength="3"></textarea>
                   </div>
 
-                <div class="form-group">
+                  <div class="form-group">
                     <label>Receiver email</label>
                     <input type="email" name="receiver_email" class="form-control" required">
                 </div>
@@ -81,26 +95,78 @@
     <!-- /.modal-dialog -->
 </div>
 
-<<script type="text/javascript">
-
+<script type="text/javascript">
 
 
   $("#add-letter").validate({
   submitHandler: function(form, event) {
     event.preventDefault();
-
-    console.log(jsonize_form($(form)));
-    addLetter(jsonize_form($(form)));
+    var data = jsonize_form($(form));
+    console.log(data);
+    if (data.id){
+      updateLetter(data);
+    } else {
+      addLetter(data);
+    }
    }
   });
 
   getLetters();
+  getDetails();
+
+
+  function updateLetter(letter) {
+
+    $.ajax({
+         url: "api/person/letter/"+letter.id,
+         type: "PUT",
+         data: JSON.stringify(letter),
+         contentType: "application/json",
+         beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"));},
+         success: function(data) {
+           toastr.success("Letter has been updated.");
+           getLetters();
+           $("#add-letter").trigger("reset");
+           $("#add-letter *[name='id']").val("");
+           $("#add-letter-modal").modal("hide");
+           console.log(data);
+         },
+         error: function(jqXHR, textStatus, errorThrown){
+           toastr.error(jqXHR.responseJSON.message);
+           console.log(jqXHR);
+         }
+      });
+
+      /*
+      $.ajax({
+           url: "api/person/letter/"+letter.id,
+           type: "PUT",
+           data: letter,
+           contentType: "application/json",
+           beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"));},
+           success: function(data) {
+             toastr.success("Letter has been updated.");
+             getLetters();
+             $("#add-letter").trigger("reset");
+             $("#add-letter *[name='id']").val("");
+             $("#add-letter-modal").modal("hide");
+             console.log(data);
+           },
+           error: function(jqXHR, textStatus, errorThrown){
+             toastr.error(jqXHR.responseJSON.message);
+             console.log(jqXHR);
+           }
+        });*/
+
+
+  }
 
   function addLetter(letter){
     $.ajax({
          url: "api/person/letter",
          type: "POST",
          data: letter,
+         //contentType: "application/json",
          beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"));},
          success: function(data) {
            toastr.success("Letter has been created.");
@@ -115,64 +181,139 @@
       });
   }
 
+
   function getLetters(){
 
     $("#letters-table").DataTable({
-      "processing" : true,
-      "serverSide" : true,
-      "ajax" : {
-        url: "api/person/letter?order=",
+      processing : true,
+      serverSide : true,
+      bDestroy: true,
+      pagingType : "simple",
+      preDrawCallbak : function( settings ) {
+        //settings._iRecordsTotal = 100;
+        //settings._iRecordsDisplay = 10;
+        console.log(settings);
+      },
+      responsive: true,
+      ajax : {
+        url: "api/person/letter",
         type: "GET",
-        beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"));},
-        dataSrc : "",
+        beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"))},
+        dataSrc : function(resp){
+          return resp;
+        },
         data : function ( d ) {
           d.offset = d.start;
           d.limit = d.length;
           d.search = d.search.value;
           d.order = encodeURIComponent((d.order[0].dir == 'asc' ? "-" : "+")+ d.columns[d.order[0].column].data);
 
+          delete d.start;
+          delete d.columns;
+          delete d.length;
+          delete d.draw;
           console.log(d);
         }
       },
       columns : [
-          { "data" : "id"},
-          { "data" : "title"},
-          { "data" : "body"},
-          { "data" : "created_at"},
-          { "data" : "send_at"},
-          { "data" : "account_id"}
+          { "data": "id",
+              "render": function ( data, type, row, meta ) {
+              return '<div style="min-width: 60px;"> <span class="badge">'+data+'</span><a class="pull-right" style="font-size: 15px; cursor: pointer;" onclick="openEditLetter('+data+')"><i class="fa fa-edit"></i></a> </div>';
+              }
+          },
+          { "data": "title" },
+          { "data": "body" },
+          { "data": "send_at" }
       ]
     });
 
-/*
+
+  }
+
+  /*
+  ajax : {
+    url: "api/person/letter/receiver/"+id,
+    type: "GET",
+    beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"))},
+    dataSrc : function(resp){
+      return resp;
+    },
+    data : function ( d ) {
+      console.log(d);
+    }
+
+  },
+  columns : [
+      { "data": "receiver_email" },
+  ],*/
+
+  function openEditLetter(id){
+
     $.ajax({
-         url: "api/person/letter?order="+encodeURIComponent("+id"),
+         url: "api/person/letter/receiver/"+id,
          type: "GET",
          beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"));},
          success: function(data) {
+           $("#add-letter *[name='receiver_email']").val(data.receiver_email);
            console.log(data);
-
-          var html = "";
-          for(var i = 0; i < data.length; i++){
-            html += '<tr class="odd">'
-                 + '<td>'+data[i].id+'</td>'
-                 + '<td>'+data[i].title+'</td>'
-                 + '<td>'+data[i].body+'</td>'
-                 + '<td class="center">'+data[i].created_at+'</td>'
-                 + '<td class="center">'+data[i].send_at+'</td>'
-                 + '<td class="center">'+data[i].account_id+'</td></tr>'
-          }
-
-          $("#letters-table tbody").html(html);
-          $("#letters-table").DataTable();
-
-
+         },
+         error: function(jqXHR, textStatus, errorThrown ){
+           console.log(jqXHR);
          }
-      }); */
+      });
 
+    $.ajax({
+         url: "api/person/letter/"+id,
+         type: "GET",
+         beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"));},
+         success: function(data) {
+           $("#add-letter *[name='id']").val(data.id);
+           $("#add-letter *[name='title']").val(data.title);
+           $("#add-letter *[name='body']").val(data.body);
+           $("#add-letter *[name='send_at']").val(data.send_at);
+           $("#add-letter-modal").modal("show");
+           console.log(data);
+         },
+         error: function(jqXHR, textStatus, errorThrown ){
+           console.log(jqXHR);
+         }
+      });
+    }
 
+    function getDetails(){
 
-  }
+        $("#communication-table").DataTable({
+        processing : true,
+        serverSide : true,
+        bDestroy: true,
+        pagingType : "simple",
+        preDrawCallbak : function( settings ) {
+          //settings._iRecordsTotal = 100;
+          //settings._iRecordsDisplay = 10;
+          console.log(settings);
+        },
+        responsive: true,
+        ajax : {
+          url: "api/person/communication",
+          type: "GET",
+          beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"))},
+          dataSrc : function(resp){
+            return resp;
+          },
+          data : function ( d ) {
+            console.log(d);
+          }
+        },
+        columns : [
+            { "data": "letter_id",
+              "render": function ( data ) {
+                return '<div><span class="badge">'+data+'</div>';
+              }
+            },
+            { "data": "email" }
+        ]
+      });
+    }
 
 
 </script>
