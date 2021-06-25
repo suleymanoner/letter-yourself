@@ -30,8 +30,8 @@ class CommunicationService extends BaseService{
     return $this->dao->get_communication($account_id);
   }
 
-  public function get_all($account_id){
-    $comm_array = $this->get_communication($account_id);
+  public function get_all($account_id, $offset, $limit){
+    $comm_array = $this->dao->get_comm_new($account_id, $offset, $limit);
     $array = array();
 
     for($i = 0 ; $i< sizeof($comm_array) ; $i++){

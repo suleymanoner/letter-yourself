@@ -27,6 +27,24 @@ class CommunicationDao extends BaseDao{
     return $this->query($query, $params);
   }
 
+  public function get_comm_new($account_id, $offset, $limit){
+
+    $params = [];
+
+    $query = "SELECT *
+              FROM communication
+              WHERE 1 = 1 ";
+
+    if ($account_id){
+      $params["account_id"] = $account_id;
+      $query .= "AND account_id = :account_id ";
+    }
+
+    $query .="LIMIT ${limit} OFFSET ${offset}";
+
+    return $this->query($query, $params);
+  }
+
 }
 
 ?>

@@ -193,12 +193,18 @@ Flight::route('PUT /admin/letter/@id', function($id){
 
 /**
  * @OA\Get(path="/person/communication", tags={"communication"}, security={{"ApiKeyAuth": {}}},
+ *     @OA\Parameter(type="integer", in="query", name="offset", default=0, description="Offset for pagination"),
+ *     @OA\Parameter(type="integer", in="query", name="limit", default=25, description="Limit for pagination"),
  *     @OA\Response(response="200", description="List of communications")
  * )
  */
 Flight::route('GET /person/communication', function(){
   $account_id = Flight::get('person')['aid'];
-  Flight::json(Flight::communicationService()->get_all($account_id));
+  $offset = Flight::query('offset', 0);
+  $limit = Flight::query('limit', 10);
+
+  Flight::json(Flight::communicationService()->get_all($account_id, $offset, $limit));
+  //Flight::json(Flight::communicationService()->get_all($account_id));
 });
 
 
