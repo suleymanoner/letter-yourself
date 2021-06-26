@@ -30,23 +30,6 @@
           <!-- /.table-responsive -->
         </div>
 
-
-
-        <div class="row">
-          <div class="table-responsive">
-              <table id="communication-table" class="table table-striped table-bordered table-hover" id="dataTables-example">
-                  <thead>
-                      <tr>
-                          <th>Letter ID</th>
-                          <th>Receiver Email</th>
-                      </tr>
-                  </thead>
-              </table>
-          </div>
-          <!-- /.table-responsive -->
-        </div>
-
-
         <!-- /.row -->
 
     </div>
@@ -114,10 +97,18 @@
   });
 
   getLetters();
-  getDetails();
 
   function updateLetter(letter) {
 
+    RestClient.put("api/person/letter/"+letter.id , letter, function(data){
+      toastr.success("Letter has been updated.");
+      getLetters();
+      $("#add-letter").trigger("reset");
+      $("#add-letter *[name='id']").val("");
+      $("#add-letter-modal").modal("hide");
+    });
+
+    /*
     $.ajax({
          url: "api/person/letter/"+letter.id,
          type: "PUT",
@@ -137,32 +128,18 @@
            toastr.error(jqXHR.responseJSON.message);
            console.log(jqXHR);
          }
-      });
-
-      /*
-      $.ajax({
-           url: "api/person/letter/"+letter.id,
-           type: "PUT",
-           data: letter,
-           contentType: "application/json",
-           beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"));},
-           success: function(data) {
-             toastr.success("Letter has been updated.");
-             getLetters();
-             $("#add-letter").trigger("reset");
-             $("#add-letter *[name='id']").val("");
-             $("#add-letter-modal").modal("hide");
-             console.log(data);
-           },
-           error: function(jqXHR, textStatus, errorThrown){
-             toastr.error(jqXHR.responseJSON.message);
-             console.log(jqXHR);
-           }
-        });*/
-
+      }); */
   }
 
   function addLetter(letter){
+    RestClient.post("api/person/letter", letter, function(data){
+      toastr.success("Letter has been created.");
+      getLetters();
+      $("#add-letter").trigger("reset");
+      $("#add-letter-modal").modal("hide");
+    });
+
+    /*
     $.ajax({
          url: "api/person/letter",
          type: "POST",
@@ -179,7 +156,7 @@
          error: function(jqXHR, textStatus, errorThrown){
            console.log(jqXHR);
          }
-      });
+      }); */
   }
 
 
@@ -238,12 +215,23 @@
           { "data": "send_at" }
       ]
     });
-
   }
 
 
   function openEditLetter(id){
 
+    RestClient.get("api/person/letter/receiver/"+id, function(data){
+      $("#add-letter *[name='receiver_email']").val(data.receiver_email);
+      console.log(data);
+    });
+
+    RestClient.get("api/person/letter/"+id, function(data){
+      Utils.json_to_form("#add-letter", data);
+      $("#add-letter-modal").modal("show");
+      console.log(data);
+    });
+
+    /*
     $.ajax({
          url: "api/person/letter/receiver/"+id,
          type: "GET",
@@ -269,9 +257,10 @@
          error: function(jqXHR, textStatus, errorThrown ){
            console.log(jqXHR);
          }
-      });
+      }); */
     }
 
+    /*
     function getDetails(){
 
         $("#communication-table").DataTable({
@@ -325,7 +314,7 @@
             { "data": "email" }
         ]
       });
-    }
+    } */
 
 
 </script>
