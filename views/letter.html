@@ -103,7 +103,7 @@
   $("#add-letter").validate({
   submitHandler: function(form, event) {
     event.preventDefault();
-    var data = jsonize_form($(form));
+    var data = Utils.jsonize_form($(form));
     console.log(data);
     if (data.id){
       updateLetter(data);
@@ -262,10 +262,7 @@
          type: "GET",
          beforeSend: function(xhr){xhr.setRequestHeader('Authentication', localStorage.getItem("token"));},
          success: function(data) {
-           $("#add-letter *[name='id']").val(data.id);
-           $("#add-letter *[name='title']").val(data.title);
-           $("#add-letter *[name='body']").val(data.body);
-           $("#add-letter *[name='send_at']").val(data.send_at);
+           Utils.json_to_form("#add-letter", data);
            $("#add-letter-modal").modal("show");
            console.log(data);
          },
