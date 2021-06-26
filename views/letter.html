@@ -15,7 +15,7 @@
         <br>
 
         <div class="row">
-          <div class="table-responsive">
+          <div class="table-responsive"  style="padding-bottom: 30px">
               <table id="letters-table" class="table table-striped table-bordered table-hover" id="dataTables-example">
                   <thead>
                       <tr>
@@ -29,6 +29,8 @@
           </div>
           <!-- /.table-responsive -->
         </div>
+
+
 
         <div class="row">
           <div class="table-responsive">
@@ -126,6 +128,7 @@
          success: function(data) {
            toastr.success("Letter has been updated.");
            getLetters();
+           getDetails();
            $("#add-letter").trigger("reset");
            $("#add-letter *[name='id']").val("");
            $("#add-letter-modal").modal("hide");
@@ -188,12 +191,23 @@
       serverSide : true,
       bDestroy: true,
       pagingType : "simple",
-      preDrawCallbak : function( settings ) {
-        //settings._iRecordsTotal = 100;
-        //settings._iRecordsDisplay = 10;
+      preDrawCallback : function( settings ) {
+        if (settings.aoData.length < settings._iDisplayLength){
+          settings._iRecordsTotal=0;
+          settings._iRecordsDisplay=0;
+        }else{
+          settings._iRecordsTotal=100000;
+          settings._iRecordsDisplay=100000;
+        }
         console.log(settings);
       },
       responsive: true,
+      language: {
+            "zeroRecords": "Nothing found",
+            "info": "Showing page _PAGE_",
+            "infoEmpty": "",
+            "infoFiltered": ""
+      },
       ajax : {
         url: "api/person/letter",
         type: "GET",
@@ -270,15 +284,24 @@
         bDestroy: true,
         searching: false,
         ordering: false,
-        //paging: false,
-      //  info: false,
         pagingType : "simple",
-        preDrawCallbak : function( settings ) {
-          //settings._iRecordsTotal = 100;
-          //settings._iRecordsDisplay = 10;
+        preDrawCallback : function( settings ) {
+          if (settings.aoData.length < settings._iDisplayLength){
+            settings._iRecordsTotal=0;
+            settings._iRecordsDisplay=0;
+          }else{
+            settings._iRecordsTotal=100000;
+            settings._iRecordsDisplay=100000;
+          }
           console.log(settings);
         },
         responsive: true,
+        language: {
+              "zeroRecords": "Nothing found",
+              "info": "Showing page _PAGE_",
+              "infoEmpty": "",
+              "infoFiltered": ""
+        },
         ajax : {
           url: "api/person/communication",
           type: "GET",
