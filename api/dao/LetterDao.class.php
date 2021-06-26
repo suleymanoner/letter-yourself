@@ -36,6 +36,9 @@ class LetterDao extends BaseDao{
     return $this->query_unique("SELECT * FROM letter WHERE account_id = :acc_id AND id = :id", ["acc_id" => $account_id, "id" => $id]);
   }
 
+  public function get_letter_title_by_id($id){
+    return $this->query_unique("SELECT title FROM letter WHERE id = :id", ["id" => $id]);
+  }
 
   public function get_letter_id_by_title($title){
     return $this->query_unique("SELECT id FROM letter WHERE title = :title", ["title" => $title]);

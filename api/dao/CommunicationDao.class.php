@@ -11,22 +11,6 @@ class CommunicationDao extends BaseDao{
     return $this->query_unique("SELECT receiver_id FROM communication WHERE letter_id = :id", ["id" => $letter_id]);
   }
 
-  public function get_communication($account_id){
-
-    $params = [];
-
-    $query = "SELECT *
-              FROM communication
-              WHERE 1 = 1 ";
-
-    if ($account_id){
-      $params["account_id"] = $account_id;
-      $query .= "AND account_id = :account_id ";
-    }
-
-    return $this->query($query, $params);
-  }
-
   public function get_comm_new($account_id, $offset, $limit){
 
     $params = [];

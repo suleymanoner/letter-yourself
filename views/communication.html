@@ -14,7 +14,7 @@
               <table id="communication-table" class="table table-striped table-bordered table-hover" id="dataTables-example">
                   <thead>
                       <tr>
-                          <th>Letter ID</th>
+                          <th>Letter Title</th>
                           <th>Receiver Email</th>
                       </tr>
                   </thead>
@@ -79,7 +79,7 @@
           }
         },
         columns : [
-            { "data": "letter_id",
+            { "data": "letter_title",
               "render": function ( data ) {
                 return '<div><span class="badge">'+data+'</div>';
               }

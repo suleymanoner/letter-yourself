@@ -30,6 +30,10 @@ class LetterService extends BaseService{
     return $this->dao->get_letter_id_by_title($title);
   }
 
+  public function get_letter_title_by_id($id){
+    return $this->dao->get_letter_title_by_id($id);
+  }
+
   public function get_letter($account_id, $offset, $limit, $search, $order){
     return $this->dao->get_letter($account_id, $offset, $limit, $search, $order);
   }
