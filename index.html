@@ -148,6 +148,7 @@
         <script src="./assets/js/utils.js"></script>
         <script src="./assets/js/restClient.js"></script>
         <script src="./assets/js/controllers/letter.js"></script>
+        <script src="./assets/js/controllers/communication.js"></script>
 
         <script src="//cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
 
@@ -159,6 +160,7 @@
           $(document).ready(function() {
             var app = $.jQuerySPApp({defaultView  : "dashboard"});
             app.route({view : "letters", load : "letter.html", onReady: function() { Letter.init() }});
+            app.route({view : "communication", load : "communication.html", onReady: function() { Communication.init() }});
             app.run();
 
             if (!window.localStorage.getItem("token")){

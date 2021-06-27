@@ -87,7 +87,6 @@ class Letter {
     });
   }
 
-
   static add(letter){
     RestClient.post("api/person/letter", letter, function(data){
       toastr.success("Letter has been created.");
@@ -106,6 +105,5 @@ class Letter {
       $("#add-letter-modal").modal("hide");
     });
   }
-
 
 }
