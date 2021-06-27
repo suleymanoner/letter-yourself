@@ -67,12 +67,12 @@
                             <i class="fa fa-user fa-fw"></i> <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                            <li><a href="#userProfile"><i class="fa fa-user fa-fw"></i> User Profile</a>
                             </li>
                             <li class="admin-stuff">
                             <a href="admin.html"><i class="fa fa-users fa-fw"></i> Admin Panel</a>
                             </li>
-                            <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                            <li><a href="#settings"><i class="fa fa-gear fa-fw"></i> Settings</a>
                             </li>
                             <li class="divider"></li>
                             <li><a href="#" onclick="doLogout()"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
@@ -112,6 +112,7 @@
               <section id="letters" data-load="letter.html"></section>
               <section id="communication" data-load="communication.html"></section>
               <section id="settings" data-load="settings.html"></section>
+              <section id="userProfile" data-load="userProfile.html"></section>
             </main>
 
         </div>
@@ -149,9 +150,9 @@
         <script src="./assets/js/restClient.js"></script>
         <script src="./assets/js/controllers/letter.js"></script>
         <script src="./assets/js/controllers/communication.js"></script>
+        <script src="./assets/js/controllers/userProfile.js"></script>
 
         <script src="//cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
-
         <script src="./assets/js/dataTables/jquery.dataTables.min.js"></script>
         <script src="./assets/js/dataTables/dataTables.bootstrap.min.js"></script>
         <script src="//cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
@@ -161,6 +162,8 @@
             var app = $.jQuerySPApp({defaultView  : "dashboard"});
             app.route({view : "letters", load : "letter.html", onReady: function() { Letter.init() }});
             app.route({view : "communication", load : "communication.html", onReady: function() { Communication.init() }});
+            app.route({view : "userProfile", load : "userProfile.html", onReady: function() { UserProfile.init() }});
+
             app.run();
 
             if (!window.localStorage.getItem("token")){

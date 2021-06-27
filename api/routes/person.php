@@ -19,6 +19,44 @@ Flight::route('GET /admin/persons', function(){
 });
 
 /**
+ * @OA\Get(path="/person/profile", tags={"x-person", "person"}, security={{"ApiKeyAuth": {}}},
+ *     @OA\Response(response="200", description="Fetch individual person")
+ * )
+ */
+Flight::route('GET /person/profile', function(){
+  $account_id = Flight::get('person')['aid'];
+  $profile = Flight::personService()->get_person_by_account_id($account_id);
+  $array = array();
+  array_push($array, $profile);
+  Flight::json($array);
+});
+
+/**
+ * @OA\Get(path="/person/communication", tags={"communication"}, security={{"ApiKeyAuth": {}}},
+ *     @OA\Parameter(type="integer", in="query", name="offset", default=0, description="Offset for pagination"),
+ *     @OA\Parameter(type="integer", in="query", name="limit", default=25, description="Limit for pagination"),
+ *     @OA\Response(response="200", description="List of communications")
+ * )
+ */
+Flight::route('GET /person/communication', function(){
+  $account_id = Flight::get('person')['aid'];
+  $offset = Flight::query('offset', 0);
+  $limit = Flight::query('limit', 10);
+  Flight::json(Flight::communicationService()->get_all($account_id, $offset, $limit));
+});
+
+
+/**
+ * @OA\Get(path="/person/receiver/{id}", tags={"receiver"}, security={{"ApiKeyAuth": {}}},
+ *     @OA\Parameter(type="integer", in="path", name="id", default=1, description="Id of receiver"),
+ *     @OA\Response(response="200", description="Get receiver by id")
+ * )
+ */
+Flight::route('GET /person/receiver/@id', function($id){
+  Flight::json(Flight::receiverService()->get_receiver_email_with_id($id));
+});
+
+/**
  * @OA\Post( path="/register", tags={"login"},
  *    @OA\RequestBody(description="Person info", required=true,
  *        @OA\MediaType(
