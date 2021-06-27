@@ -1,6 +1,24 @@
 <?php
 
 /**
+ * @OA\Get(path="/admin/persons", tags={"x-admin", "persons"}, security={{"ApiKeyAuth": {}}},
+ *     @OA\Parameter(type="integer", in="query", name="offset", default=0, description="Offset for pagination"),
+ *     @OA\Parameter(type="integer", in="query", name="limit", default=25, description="Limit for pagination"),
+ *     @OA\Parameter(type="string", in="query", name="search", description="Search string for account. Case insensetive."),
+ *     @OA\Parameter(type="string", in="query", name="order", default="-id", description="Sorting : '-column_name' ascending order, '+column_name' descending order"),
+ *     @OA\Response(response="200", description="List persons")
+ * )
+ */
+Flight::route('GET /admin/persons', function(){
+  $offset = Flight::query('offset', 0);
+  $limit = Flight::query('limit', 10);
+  $search = Flight::query('search');
+  $order = Flight::query('order', '-id');
+
+  Flight::json(Flight::personService()->get_all_persons("USER", $offset, $limit, $search, $order));
+});
+
+/**
  * @OA\Post( path="/register", tags={"login"},
  *    @OA\RequestBody(description="Person info", required=true,
  *        @OA\MediaType(

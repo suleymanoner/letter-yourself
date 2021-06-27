@@ -36,13 +36,4 @@ class RestClient {
     RestClient.request(endpoint, "GET", null, success, error);
   }
 
-
-
-
-
-
-
-
-
-
 }

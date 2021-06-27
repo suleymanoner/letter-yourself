@@ -20,6 +20,14 @@ class PersonService extends BaseService{
     $this->communicationDao = new CommunicationDao();
   }
 
+  public function get_person_by_account_id($id){
+    return $this->dao->get_person_by_account_id($id);
+  }
+
+  public function get_all_persons($role, $offset, $limit, $search, $order){
+    return $this->dao->get_all_persons($role, $offset, $limit, $search, $order);
+  }
+
   public function reset($person){
 
     $db_person = $this->dao->get_person_by_token($person['token']);
@@ -30,9 +38,7 @@ class PersonService extends BaseService{
     $this->dao->update($db_person['id'], ['password' => md5($person['password']), 'token' => NULL]);
 
     return $db_person;
-
   }
-
 
   public function forgot($person){
 
@@ -44,7 +50,6 @@ class PersonService extends BaseService{
       $db_person = $this->update($db_person['id'], ['token' => md5(random_bytes(16)), 'token_created_at' => date(Config::DATE_FORMAT)]);
 
       $this->smtpClient->send_person_recovery_token($db_person);
-
   }
 
   public function login($person){
@@ -62,7 +67,6 @@ class PersonService extends BaseService{
 
     return $db_person;
   }
-
 
   public function register($person){
     if(!isset($person['account'])) throw new Exception("Account is required!");
