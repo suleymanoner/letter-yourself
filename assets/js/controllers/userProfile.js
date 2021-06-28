@@ -10,8 +10,10 @@ class UserProfile {
         processing : true,
         serverSide : true,
         bDestroy: true,
+        bInfo : false, // remove showing table pages
+        bPaginate: false, // remove previous and next button
         pagingType: "simple",
-        lengthChange: false,
+        lengthChange: false, // remove showing entries
         searching: false,
         ordering: false,
         preDrawCallback : function( settings ) {
